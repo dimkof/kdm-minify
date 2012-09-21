@@ -6,10 +6,10 @@
  *	KDM CMS based on the Kohana framework
  *	by Dmitry Momot	(#DimkOf)
  *	---------------------------------------
- *	Project support:	dmitry@dmstudio.pro
- *	Visit:				http://dmstudio.pro
- *						http://dimkof.com
- *						http://dimkof.ru
+ *	Project support:  dmitry@dmstudio.pro
+ *	Visit:            http://dmstudio.pro
+ *	                  http://dimkof.com
+ *	                  http://dimkof.ru
  */
  
 class Minify_Core {
