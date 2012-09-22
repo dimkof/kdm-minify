@@ -6,10 +6,10 @@
  *	KDM CMS based on the Kohana framework
  *	by Dmitry Momot	(#DimkOf)
  *	---------------------------------------
- *	Project support:  dmitry@dmstudio.pro
- *	Visit:            http://dmstudio.pro
- *	                  http://dimkof.com
- *	                  http://dimkof.ru
+ *	Project support:	dmitry@dmstudio.pro
+ *	Visit:				http://dmstudio.pro
+ *						http://dimkof.com
+ *						http://dimkof.ru
  */
  
 class Minify_Core {
@@ -42,17 +42,25 @@ class Minify_Core {
 		{
 			$source = UTF8::trim($source_link, '/');
 			
-			if(file_exists($source_link))
+			if(file_exists($source))
 			{
 				$source = $source;
-				$lastmodified_source[] = max($lastmodified, filemtime($source_link)); 
+				$lastmodified_source[] = max($lastmodified, filemtime($source)); 
 			}
 			else
 			{
-				throw new HTTP_Exception_404('File ":file" not found', array(':file' => $s_link));
+				if($this->external($s_link))
+				{
+					$source = $source;
+					$lastmodified_source[] = time(); 
+				}
+				else
+				{						
+					throw new HTTP_Exception_404('File ":file" not found', array(':file' => $s_link));
+				}
 			}
 			
-			$source_link = array($source_link);
+			$source_link = array($source);
 		}
 		else
 		{
@@ -73,7 +81,16 @@ class Minify_Core {
 				}
 				else
 				{
-					throw new HTTP_Exception_404('File ":file" not found', array(':file' => $s_link));
+					if($this->external($s_link))
+					{
+						$source .= $s_link;
+						$source_link[] = $s_link;
+						$lastmodified_source[] = time(); 
+					}
+					else
+					{						
+						throw new HTTP_Exception_404('File ":file" not found', array(':file' => $s_link));
+					}
 				}
 			}
 		}
@@ -217,6 +234,21 @@ class Minify_Core {
 			return Kohana::$base_url.$this->source_link;
 		}
 		else
+		{
+			return FALSE;
+		}
+	}
+	
+	
+	protected function external($url)
+	{
+		$Headers = @get_headers($url);
+		
+		if(strpos($Headers[0], '200')) 
+		{
+			return TRUE;
+		} 
+		else 
 		{
 			return FALSE;
 		}
